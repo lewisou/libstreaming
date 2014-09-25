@@ -23,7 +23,6 @@ package net.majorkernelpanic.streaming;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.concurrent.CountDownLatch;
 
 import net.majorkernelpanic.streaming.audio.AudioQuality;
 import net.majorkernelpanic.streaming.audio.AudioStream;
@@ -39,6 +38,7 @@ import android.hardware.Camera.CameraInfo;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.util.Log;
 
 /**
  * You should instantiate this class with the {@link SessionBuilder}.<br />
@@ -106,13 +106,13 @@ public class Session {
 	private int mTimeToLive = 64;
 	private long mTimestamp;
 
-	private AudioStream mAudioStream = null;
-	private VideoStream mVideoStream = null;
+	protected AudioStream mAudioStream = null;
+	protected VideoStream mVideoStream = null;
 
 	private Callback mCallback;
 	private Handler mMainHandler;
 
-	private Handler mHandler;
+	protected Handler mHandler;
 
 	/** 
 	 * Creates a streaming session that can be customized by adding tracks.
@@ -176,19 +176,19 @@ public class Session {
 	}
 
 	/** You probably don't need to use that directly, use the {@link SessionBuilder}. */
-	void addAudioTrack(AudioStream track) {
+	public void addAudioTrack(AudioStream track) {
 		removeAudioTrack();
 		mAudioStream = track;
 	}
 
 	/** You probably don't need to use that directly, use the {@link SessionBuilder}. */
-	void addVideoTrack(VideoStream track) {
+	public void addVideoTrack(VideoStream track) {
 		removeVideoTrack();
 		mVideoStream = track;
 	}
 
 	/** You probably don't need to use that directly, use the {@link SessionBuilder}. */
-	void removeAudioTrack() {
+	public void removeAudioTrack() {
 		if (mAudioStream != null) {
 			mAudioStream.stop();
 			mAudioStream = null;
@@ -196,7 +196,7 @@ public class Session {
 	}
 
 	/** You probably don't need to use that directly, use the {@link SessionBuilder}. */
-	void removeVideoTrack() {
+	public void removeVideoTrack() {
 		if (mVideoStream != null) {
 			mVideoStream.stopPreview();
 			mVideoStream = null;
@@ -426,7 +426,9 @@ public class Session {
 			public void run() {
 				try {
 					syncStart();
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}				
 		});
 	}
@@ -443,7 +445,6 @@ public class Session {
 			InvalidSurfaceException, 
 			UnknownHostException,
 			IOException {
-
 		Stream stream = id==0 ? mAudioStream : mVideoStream;
 		if (stream!=null && !stream.isStreaming()) {
 			try {

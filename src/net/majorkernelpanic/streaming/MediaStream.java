@@ -317,15 +317,17 @@ public abstract class MediaStream implements Stream {
 
 	protected void closeSockets() {
 		try {
-			mReceiver.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
 			mSender.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		try {
+			mReceiver.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		try {
 			mLss.close();
 		} catch (Exception e) {
@@ -335,5 +337,4 @@ public abstract class MediaStream implements Stream {
 		mSender = null;
 		mReceiver = null;
 	}
-	
 }

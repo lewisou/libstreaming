@@ -173,7 +173,7 @@ public class AACADTSPacketizer extends AbstractPacketizer implements Runnable {
 
 	}
 
-	private int fill(byte[] buffer, int offset,int length) throws IOException {
+	protected int fill(byte[] buffer, int offset,int length) throws IOException {
 		int sum = 0, len;
 		while (sum<length) {
 			len = is.read(buffer, offset+sum, length-sum);

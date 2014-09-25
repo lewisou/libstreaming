@@ -62,22 +62,22 @@ public class SessionBuilder {
 	public final static int AUDIO_AAC = 5;
 
 	// Default configuration
-	private VideoQuality mVideoQuality = VideoQuality.DEFAULT_VIDEO_QUALITY;
-	private AudioQuality mAudioQuality = AudioQuality.DEFAULT_AUDIO_QUALITY;
-	private Context mContext;
-	private int mVideoEncoder = VIDEO_H263; 
-	private int mAudioEncoder = AUDIO_AMRNB;
-	private int mCamera = CameraInfo.CAMERA_FACING_BACK;
-	private int mTimeToLive = 64;
-	private int mOrientation = 0;
-	private boolean mFlash = false;
-	private SurfaceView mSurfaceView = null;
-	private String mOrigin = null;
-	private String mDestination = null;
-	private Session.Callback mCallback = null;
+	protected VideoQuality mVideoQuality = VideoQuality.DEFAULT_VIDEO_QUALITY;
+	protected AudioQuality mAudioQuality = AudioQuality.DEFAULT_AUDIO_QUALITY;
+	protected Context mContext;
+	protected int mVideoEncoder = VIDEO_H263; 
+	protected int mAudioEncoder = AUDIO_AMRNB;
+	protected int mCamera = CameraInfo.CAMERA_FACING_BACK;
+	protected int mTimeToLive = 64;
+	protected int mOrientation = 0;
+	protected boolean mFlash = false;
+	protected SurfaceView mSurfaceView = null;
+	protected String mOrigin = null;
+	protected String mDestination = null;
+	protected Session.Callback mCallback = null;
 
 	// Removes the default public constructor
-	private SessionBuilder() {}
+	protected SessionBuilder() {}
 
 	// The SessionManager implements the singleton pattern
 	private static volatile SessionBuilder sInstance = null; 
