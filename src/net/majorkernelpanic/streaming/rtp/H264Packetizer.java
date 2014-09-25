@@ -39,15 +39,14 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 
 	public final static String TAG = "H264Packetizer";
 
-	private Thread t = null;
-	private int naluLength = 0;
-	private long delay = 0, oldtime = 0;
-	private Statistics stats = new Statistics();
-	private byte[] sps = null, pps = null, stapa = null;
-	byte[] header = new byte[5];	
-	private int count = 0;
-	private int streamType = 1;
-
+	protected Thread t = null;
+	protected int naluLength = 0;
+	protected long delay = 0, oldtime = 0;
+	protected Statistics stats = new Statistics();
+	protected byte[] sps = null, pps = null, stapa = null;
+	protected byte[] header = new byte[5];	
+	protected int count = 0;
+	protected int streamType = 1;
 
 	public H264Packetizer() {
 		super();
@@ -84,12 +83,12 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 			stapa[0] = 24;
 			stapa[1] = (byte) (sps.length>>8);
 			stapa[2] = (byte) (sps.length&0xFF);
-			stapa[sps.length+1] = (byte) (pps.length>>8);
-			stapa[sps.length+2] = (byte) (pps.length&0xFF);
+			stapa[sps.length+3] = (byte) (pps.length>>8);
+			stapa[sps.length+4] = (byte) (pps.length&0xFF);
 			System.arraycopy(sps, 0, stapa, 3, sps.length);
 			System.arraycopy(pps, 0, stapa, 5+sps.length, pps.length);
 		}
-	}	
+	}
 
 	public void run() {
 		long duration = 0;
@@ -117,11 +116,12 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 				stats.push(duration);
 				// Computes the average duration of a NAL unit
 				delay = stats.average();
-				//Log.d(TAG,"duration: "+duration/1000000+" delay: "+delay/1000000);
+//				Log.d(TAG,"duration: "+duration/1000000+" delay: "+delay/1000000);
 
 			}
-		} catch (IOException e) {
-		} catch (InterruptedException e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 
 		Log.d(TAG,"H264 packetizer stopped !");
 
@@ -132,7 +132,7 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 	 * If it is too big, we split it in FU-A units (RFC 3984).
 	 */
 	@SuppressLint("NewApi")
-	private void send() throws IOException, InterruptedException {
+	protected void send() throws IOException, InterruptedException {
 		int sum = 1, len = 0, type;
 
 		if (streamType == 0) {
@@ -165,7 +165,6 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 		// Parses the NAL unit type
 		type = header[4]&0x1F;
 
-
 		// The stream already contains NAL unit type 7 or 8, we don't need 
 		// to add them to the stream ourselves
 		if (type == 7 || type == 8) {
@@ -187,7 +186,7 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 			super.send(rtphl+stapa.length);
 		}
 
-		//Log.d(TAG,"- Nal unit length: " + naluLength + " delay: "+delay/1000000+" type: "+type);
+//		Log.d(TAG,"- Nal unit length: " + naluLength + " delay: "+delay/1000000+" type: "+type);
 
 		// Small NAL unit => Single NAL unit 
 		if (naluLength<=MAXPACKETSIZE-rtphl-2) {
@@ -229,7 +228,7 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 		}
 	}
 
-	private int fill(byte[] buffer, int offset,int length) throws IOException {
+	protected int fill(byte[] buffer, int offset,int length) throws IOException {
 		int sum = 0, len;
 		while (sum<length) {
 			len = is.read(buffer, offset+sum, length-sum);
@@ -241,7 +240,7 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 		return sum;
 	}
 
-	private void resync() throws IOException {
+	protected void resync() throws IOException {
 		int type;
 
 		Log.e(TAG,"Packetizer out of sync ! Let's try to fix that...(NAL length: "+naluLength+")");
