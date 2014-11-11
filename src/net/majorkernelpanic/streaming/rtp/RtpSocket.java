@@ -51,27 +51,27 @@ public class RtpSocket implements Runnable {
 	public static final int RTP_HEADER_LENGTH = 12;
 	public static final int MTU = 1300;
 
-	private MulticastSocket mSocket;
-	private DatagramPacket[] mPackets;
-	private byte[][] mBuffers;
-	private long[] mTimestamps;
+	protected MulticastSocket mSocket;
+	protected DatagramPacket[] mPackets;
+	protected byte[][] mBuffers;
+	protected long[] mTimestamps;
 
-	private SenderReport mReport;
+	protected SenderReport mReport;
 	
-	private Semaphore mBufferRequested, mBufferCommitted;
-	private Thread mThread;
+	protected Semaphore mBufferRequested, mBufferCommitted;
+	protected Thread mThread;
 
-	private int mTransport;
-	private long mCacheSize;
-	private long mClock = 0;
-	private long mOldTimestamp = 0;
-	private int mSsrc, mSeq = 0, mPort = -1;
-	private int mBufferCount, mBufferIn, mBufferOut;
-	private int mCount = 0;
-	private byte mTcpHeader[];
+	protected int mTransport;
+	protected long mCacheSize;
+	protected long mClock = 0;
+	protected long mOldTimestamp = 0;
+	protected int mSsrc, mSeq = 0, mPort = -1;
+	protected int mBufferCount, mBufferIn, mBufferOut;
+	protected int mCount = 0;
+	protected byte mTcpHeader[];
 	protected OutputStream mOutputStream = null;
 	
-	private AverageBitrate mAverageBitrate;
+	protected AverageBitrate mAverageBitrate;
 
 	/**
 	 * This RTP socket implements a buffering mechanism relying on a FIFO of buffers and a Thread.
@@ -316,7 +316,7 @@ public class RtpSocket implements Runnable {
 		resetFifo();
 	}
 
-	private void sendTCP() {
+	protected void sendTCP() {
 		synchronized (mOutputStream) {
 			int len = mPackets[mBufferOut].getLength();
 			Log.d(TAG,"sent "+len);
@@ -329,7 +329,7 @@ public class RtpSocket implements Runnable {
 		}
 	}
 
-	private void setLong(byte[] buffer, long n, int begin, int end) {
+	protected void setLong(byte[] buffer, long n, int begin, int end) {
 		for (end--; end >= begin; end--) {
 			buffer[end] = (byte) (n % 256);
 			n >>= 8;
