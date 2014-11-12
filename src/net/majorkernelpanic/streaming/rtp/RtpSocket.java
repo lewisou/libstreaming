@@ -49,7 +49,8 @@ public class RtpSocket implements Runnable {
 	public final static int TRANSPORT_TCP = 0x01;	
 	
 	public static final int RTP_HEADER_LENGTH = 12;
-	public static final int MTU = 1300;
+//	public static final int MTU = 1300;
+	public static final int MTU = 5000;
 
 	protected MulticastSocket mSocket;
 	protected DatagramPacket[] mPackets;
@@ -121,7 +122,7 @@ public class RtpSocket implements Runnable {
 		
 	}
 
-	private void resetFifo() {
+	protected void resetFifo() {
 		mCount = 0;
 		mBufferIn = 0;
 		mBufferOut = 0;
