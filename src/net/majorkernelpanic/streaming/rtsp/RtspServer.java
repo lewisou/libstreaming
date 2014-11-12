@@ -195,7 +195,7 @@ public class RtspServer extends Service {
 		}
 		return false;
 	}
-	
+
 	public boolean isEnabled() {
 		return mEnabled;
 	}
@@ -273,17 +273,17 @@ public class RtspServer extends Service {
 				for (CallbackListener cl : mListeners) {
 					cl.onMessage(this, id);
 				}
-			}			
+			}
 		}
-	}	
-	
+	}
+
 	protected void postError(Exception exception, int id) {
 		synchronized (mListeners) {
 			if (mListeners.size() > 0) {
 				for (CallbackListener cl : mListeners) {
 					cl.onError(this, exception, id);
 				}
-			}			
+			}
 		}
 	}
 

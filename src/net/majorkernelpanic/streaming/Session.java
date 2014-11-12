@@ -101,16 +101,16 @@ public class Session {
 	 */
 	public final static int ERROR_OTHER = 0x06;
 
-	private String mOrigin;
-	private String mDestination;
-	private int mTimeToLive = 64;
-	private long mTimestamp;
+	protected String mOrigin;
+	protected String mDestination;
+	protected int mTimeToLive = 64;
+	protected long mTimestamp;
 
 	protected AudioStream mAudioStream = null;
 	protected VideoStream mVideoStream = null;
 
-	private Callback mCallback;
-	private Handler mMainHandler;
+	protected Callback mCallback;
+	protected Handler mMainHandler;
 
 	protected Handler mHandler;
 
