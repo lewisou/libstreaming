@@ -190,6 +190,7 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 
 		// Small NAL unit => Single NAL unit 
 		if (naluLength<=MAXPACKETSIZE-rtphl-2) {
+//			System.out.println("Single packet !!!!!!!!!!!!!!!!!!!!!!!");
 			buffer = socket.requestBuffer();
 			buffer[rtphl] = header[4];
 			len = fill(buffer, rtphl+1,  naluLength-1);
@@ -197,10 +198,12 @@ public class H264Packetizer extends AbstractPacketizer implements Runnable {
 			socket.markNextPacket();
 			super.send(naluLength+rtphl);
 			//Log.d(TAG,"----- Single NAL unit - len:"+len+" delay: "+delay);
+			
+		
 		}
 		// Large NAL unit => Split nal unit 
 		else {
-
+//			System.out.println("Multiple packets !!!!!!!!!!!!!!!!!!!!!!! ------");
 			// Set FU-A header
 			header[1] = (byte) (header[4] & 0x1F);  // FU header type
 			header[1] += 0x80; // Start bit
